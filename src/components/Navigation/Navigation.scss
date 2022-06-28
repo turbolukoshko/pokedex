@@ -1,0 +1,40 @@
+.nav {
+  height: var(--size-500);
+  background: var(--red);
+  &__logo {
+    width: var(--size-150);
+
+    img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &-title,
+    &-description {
+      color: var(--white);
+    }
+
+    &-title {
+      font-size: var(--size-50);
+    }
+
+    &-description {
+      font-weight: 600;
+    }
+
+    &-image {
+      position: absolute;
+      top: 25%;
+      img {
+        width: var(--size-400);
+      }
+    }
+  }
+}
