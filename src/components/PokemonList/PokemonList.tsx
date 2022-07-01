@@ -1,8 +1,13 @@
-import axios from "axios";
 import React, { FC, useEffect, useState } from "react";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getPokemonList } from "../../store/actions/actionCreators/pokemonActions";
 
 export const PokemonList: FC = () => {
   // TODO: add types, refactoring, move request into store
+
+  const pokemon: any = useSelector((state: any) => state.pokemon);
+  const dispatch = useDispatch();
 
   const [pokemonList, setPokemonList] = useState<any>([]);
   const [pokemonDetails, setPokemonDetails] = useState<any>([]);
@@ -32,6 +37,10 @@ export const PokemonList: FC = () => {
       getPokemonDetails();
     }
   }, [pokemonList]);
+
+  useEffect(() => {
+    dispatch(getPokemonList());
+  }, []);
 
   const sortedPokemonList =
     pokemonDetails && pokemonDetails.sort((a: any, b: any) => a.id - b.id);
