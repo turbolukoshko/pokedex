@@ -1,18 +1,6 @@
-import { PokemonActionTypes } from "./../actions/actionTypes/pokemonActionTypes";
-const initialState: any = {
-  data: [],
-  loading: false,
-  error: null,
-};
+import { combineReducers } from "redux";
+import { pokemonReducer } from "../pokemon/pokemonReducer";
 
-// TODO: add types
-
-export const pokemonReducer = (state = initialState, action: any) => {
-  switch (action.type) {
-    case PokemonActionTypes.FETCH_POKEMON_LIST:
-      console.log("works");
-      return { ...state, loading: true };
-    default:
-      return state;
-  }
-};
+export const rootReducer = combineReducers({
+  pokemon: pokemonReducer,
+});

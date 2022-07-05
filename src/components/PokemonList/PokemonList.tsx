@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { getPokemonList } from "../../store/actions/actionCreators/pokemonActions";
+import { getPokemonList } from "../../store/pokemon/pokemonActions";
 
 export const PokemonList: FC = () => {
   // TODO: add types, refactoring, move request into store
@@ -12,31 +12,31 @@ export const PokemonList: FC = () => {
   const [pokemonList, setPokemonList] = useState<any>([]);
   const [pokemonDetails, setPokemonDetails] = useState<any>([]);
 
-  useEffect(() => {
-    const getPokemonList = async () => {
-      const res = await axios.get(
-        "https://pokeapi.co/api/v2/pokemon?limit=20&offset=0"
-      );
+  // useEffect(() => {
+  //   const getPokemonList = async () => {
+  //     const res = await axios.get(
+  //       "https://pokeapi.co/api/v2/pokemon?limit=20&offset=0"
+  //     );
 
-      setPokemonList(res.data);
-    };
+  //     setPokemonList(res.data);
+  //   };
 
-    getPokemonList();
-  }, []);
+  //   getPokemonList();
+  // }, []);
 
-  useEffect(() => {
-    if (pokemonList.results && pokemonList.results.length) {
-      const getPokemonDetails = async () => {
-        pokemonList.results &&
-          pokemonList.results.map(async (x: any) => {
-            const res = await axios.get(x.url);
-            setPokemonDetails((current: any) => [...current, res.data]);
-          });
-      };
+  // useEffect(() => {
+  //   if (pokemonList.results && pokemonList.results.length) {
+  //     const getPokemonDetails = async () => {
+  //       pokemonList.results &&
+  //         pokemonList.results.map(async (x: any) => {
+  //           const res = await axios.get(x.url);
+  //           setPokemonDetails((current: any) => [...current, res.data]);
+  //         });
+  //     };
 
-      getPokemonDetails();
-    }
-  }, [pokemonList]);
+  //     getPokemonDetails();
+  //   }
+  // }, [pokemonList]);
 
   useEffect(() => {
     dispatch(getPokemonList());
@@ -48,11 +48,11 @@ export const PokemonList: FC = () => {
   return (
     <main>
       Pokemon List
-      <ul>
+      {/* <ul>
         {sortedPokemonList.map((x: any) => (
           <li>{x.name}</li>
         ))}
-      </ul>
+      </ul> */}
     </main>
   );
 };

@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import thunk, { ThunkAction } from "redux-thunk";
-import { pokemonReducer } from "./reducers/rootReducer";
+import { rootReducer } from "./reducers/rootReducer";
 
 declare module "redux" {
   interface Dispatch<A extends Action = AnyAction> {
@@ -9,8 +9,6 @@ declare module "redux" {
 }
 
 export const store = configureStore({
-  reducer: {
-    pokemon: pokemonReducer,
-  },
+  reducer: rootReducer,
   middleware: [thunk],
 });
