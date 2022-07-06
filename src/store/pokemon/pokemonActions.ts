@@ -2,6 +2,7 @@ import { pokeapi } from "./../../api/index";
 import axios from "axios";
 import { Dispatch } from "react";
 import { PokemonActions, PokemonActionTypes } from "./pokemonActionTypes";
+import { PokemonItemData, PokemonPagination } from "./types";
 
 export const getPokemonList = (limit: number = 20, offset: number = 0) => {
   return async (dispatch: Dispatch<PokemonActions>) => {
@@ -16,7 +17,18 @@ export const getPokemonList = (limit: number = 20, offset: number = 0) => {
       const getPokemon = async () => {
         const pokemonUrls = await getPokemonList();
 
-        return pokemonUrls.data.results.map(async (item: any) => {
+        const { data } = pokemonUrls;
+        const { count, next, previous } = data;
+
+        const pokemonInfo = {
+          count,
+          next,
+          previous,
+        };
+
+        dispatch(fetchPokemonListInfo(pokemonInfo));
+
+        return data.results.map(async (item: PokemonItemData) => {
           const result = await axios.get(item.url);
           return result.data;
         });
@@ -27,8 +39,9 @@ export const getPokemonList = (limit: number = 20, offset: number = 0) => {
 
       // Get array with converted data from array of fulfilled promises
       const pokemon = await Promise.all(promises);
+      dispatch(fetchPokemonListSuccess(pokemon));
     } catch (e) {
-      console.log(e);
+      dispatch(fetchPokemonListError((e as Error).message));
     }
   };
 };
@@ -37,7 +50,18 @@ const fetchPokemonList = (): PokemonActions => ({
   type: PokemonActionTypes.FETCH_POKEMON_LIST,
 });
 
-const fetchPokemonListSuccess = (payload: any): PokemonActions => ({
+const fetchPokemonListInfo = (payload: PokemonPagination): PokemonActions => ({
+  type: PokemonActionTypes.FETCH_POKEMON_LIST_PAGINATION,
+  payload,
+});
+
+// TODO: add types for the payload
+const fetchPokemonListSuccess = (payload: any[]): PokemonActions => ({
   type: PokemonActionTypes.FETCH_POKEMON_LIST_SUCCESS,
+  payload,
+});
+
+const fetchPokemonListError = (payload: string | null): PokemonActions => ({
+  type: PokemonActionTypes.FETCH_POKEMON_LIST_ERROR,
   payload,
 });
