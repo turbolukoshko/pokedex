@@ -4,7 +4,7 @@ import "./Navigation.scss";
 
 export const Navigation = () => {
   return (
-    <nav className="nav">
+    <nav className="nav wrapper">
       <div className="nav__logo">
         <img src={logo} alt="logo" />
       </div>
