@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPokemonList } from "../../store/pokemon/pokemonActions";
 import { PokemonSelectorState } from "../../store/pokemon/types";
 import { Loader } from "../Loader/Loader";
-import { PokemonElement } from "../PokemonElement";
+import { PokemonTile } from "../PokemonTile";
 import "./PokemonList.scss";
 
 export const PokemonList: FC = (): JSX.Element => {
@@ -25,8 +25,9 @@ export const PokemonList: FC = (): JSX.Element => {
       ) : (
         <ul className="pokemon__list">
           {data.map((pokemon) => {
-            console.log(pokemon);
-            return <PokemonElement pokemon={pokemon} key={pokemon.id} />;
+            return (
+              <PokemonTile pokemon={pokemon} key={pokemon.id}/>
+            );
           })}
         </ul>
       )}
