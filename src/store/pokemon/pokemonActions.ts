@@ -1,4 +1,4 @@
-import { pokeapi } from "./../../api/index";
+import { getPokemons } from "./../../api/index";
 import axios from "axios";
 import { Dispatch } from "react";
 import { PokemonActions, PokemonActionTypes } from "./pokemonActionTypes";
@@ -11,7 +11,7 @@ export const getPokemonList = (limit: number = 20, offset: number = 0) => {
 
       // Get list of pokemon urls in format: results: [{name, url}]
       const getPokemonList = async () =>
-        await axios.get(pokeapi(limit, offset));
+        await axios.get(getPokemons(limit, offset));
 
       // Get a list of pokemon
       const getPokemon = async () => {

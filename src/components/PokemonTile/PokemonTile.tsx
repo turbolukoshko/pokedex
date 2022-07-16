@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { NavigateFunction } from "react-router-dom";
 import { getPokemonNumber, modifyPokemonName } from "../../services/helper";
 import "./PokemonTile.scss";
 
@@ -6,6 +7,7 @@ import "./PokemonTile.scss";
 
 interface IPokemonTile {
   pokemon: any;
+  onClick: any;
 }
 
 type PokemonType = {
@@ -16,10 +18,17 @@ type PokemonType = {
   };
 };
 
-export const PokemonTile: FC<IPokemonTile> = ({ pokemon }): JSX.Element => {
+export const PokemonTile: FC<IPokemonTile> = ({
+  pokemon,
+  onClick,
+}): JSX.Element => {
   const { name } = pokemon.types[0].type;
+  // TODO: NEED TO REFACTORING onClick FUNCTION
   return (
-    <li className={`pokemon__list-pokemon ${name}`}>
+    <li
+      className={`pokemon__list-pokemon ${name}`}
+      onClick={() => onClick(`/${pokemon.id}`)}
+    >
       <div className="pokemon__list-pokemon-info">
         <h3 className="pokemon__list-pokemon-info-name">
           {modifyPokemonName(pokemon.name)}
