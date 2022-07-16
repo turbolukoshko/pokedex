@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import pokeball from "../../assets/pokeball2.png";
 import "./Navigation.scss";
