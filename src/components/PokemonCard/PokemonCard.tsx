@@ -2,7 +2,11 @@ import axios from "axios";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPokemon } from "../../api";
-import { getPokemonIdFromUrl, isEmptyObject } from "../../services/helper";
+import {
+  getPokemonIdFromUrl,
+  isEmptyObject,
+  modifyPokemonName,
+} from "../../services/helper";
 import { PokemonReusableType } from "../../types/global";
 import { Loader } from "../Loader/Loader";
 
@@ -73,6 +77,18 @@ type PokemonFetchEvolutionChainType = {
   species: PokemonReusableType;
 };
 
+type AdditionalPokemonInfoType = {
+  baseHappiness: number | null;
+  captureRate: number | null;
+  color: string | null;
+  flavorTextEntries:
+    | { flavor_text: string; language: PokemonReusableType }[]
+    | [];
+  genus: string | null;
+  habitat: string | null;
+  shape: string | null;
+};
+
 export const PokemonCard: FC = (): JSX.Element => {
   const queryParams: PokemonCardQueryType = useParams();
 
@@ -84,6 +100,16 @@ export const PokemonCard: FC = (): JSX.Element => {
   const [pokemonEvolutionChain, setPokemonEvolutionChain] = useState<any>([]);
   const [pokemonEvolutionChainImages, setPokemonEvolutionChainImages] =
     useState<any>([]);
+  const [additionalPokemonInfo, setAdditionalPokemonInfo] =
+    useState<AdditionalPokemonInfoType>({
+      baseHappiness: null,
+      captureRate: null,
+      color: null,
+      flavorTextEntries: [],
+      genus: null,
+      habitat: null,
+      shape: null,
+    });
 
   const getPokemonData = useCallback(async () => {
     try {
@@ -97,12 +123,38 @@ export const PokemonCard: FC = (): JSX.Element => {
   }, [queryParams.id]);
 
   const fetchPokemonEvolutionChain = async (url: string) => {
+    console.log(url);
     try {
       const getSpeciesData = await axios.get(url);
+
+      const {
+        base_happiness,
+        capture_rate,
+        color: { name },
+        flavor_text_entries,
+        genera,
+        habitat,
+        shape,
+      } = getSpeciesData.data;
+
+      const additionalPokemonData = {
+        baseHappiness: base_happiness,
+        captureRate: capture_rate,
+        color: name,
+        flavorTextEntries: flavor_text_entries,
+        genus: genera[7].genus,
+        habitat: habitat.name,
+        shape: shape.name,
+      };
+
       const speciesUrl: { url: string } = getSpeciesData.data.evolution_chain;
       const getEvolutionChain = await axios.get(speciesUrl.url);
 
       setFetchEvolutionChainData(getEvolutionChain.data.chain);
+      setAdditionalPokemonInfo((additionalPokemonInfo) => ({
+        ...additionalPokemonInfo,
+        ...additionalPokemonData,
+      }));
     } catch (e) {
       if (e instanceof Error) {
         console.error(e.message);
@@ -208,36 +260,16 @@ export const PokemonCard: FC = (): JSX.Element => {
     (pokemonOption: FilteredPokemonEvolutionChainType) => pokemonOption.url
   );
 
-  const getPokemonEvolutionChainImages = (): void => {
+  const getPokemonEvolutionChainImages = async () => {
     if (!getUrlFromPokemonEvolutionChain[0]?.includes("undefined")) {
-      getUrlFromPokemonEvolutionChain.map(
-        async (pokemonEvolutionChain: string) => {
-          if (pokemonEvolutionChain !== undefined) {
-            const images = await axios.get(pokemonEvolutionChain);
-
-            setPokemonEvolutionChainImages((prev: []) => [
-              ...prev,
-              images.data.sprites.other.dream_world.front_default,
-            ]);
-          }
-        }
+      const t = getUrlFromPokemonEvolutionChain.map(
+        async (pokemonEvolutionChain: string) =>
+          await axios.get(pokemonEvolutionChain)
       );
+
+      Promise.all(t).then((res) => setPokemonEvolutionChainImages(res));
     }
   };
-
-  const sortedPokemonEvolutionChainImages: [] =
-    pokemonEvolutionChainImages.sort(
-      (pokemonImage: string, comparablePokemonImage: string) => {
-        const img = getPokemonIdFromUrl(pokemonImage, 91, 4);
-        const comparableImg = getPokemonIdFromUrl(
-          comparablePokemonImage,
-          91,
-          4
-        );
-
-        return Number(img) - Number(comparableImg);
-      }
-    );
 
   useEffect(() => {
     getPokemonEvolutionChainImages();
@@ -254,7 +286,7 @@ export const PokemonCard: FC = (): JSX.Element => {
           />
         </div>
         <div className="pokemon-card__info-description">
-          <h1>{pokemon.name}</h1>
+          <h1>{modifyPokemonName(pokemon.name)}</h1>
           <h1>{getPokemonSize(pokemon.height, PokemonUnit.m)}</h1>
           <h1>{getPokemonSize(pokemon.weight, PokemonUnit.kg)}</h1>
         </div>
@@ -263,9 +295,9 @@ export const PokemonCard: FC = (): JSX.Element => {
             {pokemon.stats.map((stat: PokemonStatsType, index: number) => (
               <li key={index}>
                 <p>
-                  {stat.stat.name}: {stat.base_stat}
+                  {modifyPokemonName(stat.stat.name)}: {stat.base_stat}
                 </p>
-                <p>effort: {stat.effort}</p>
+                <p>Effort: {stat.effort}</p>
               </li>
             ))}
           </ul>
@@ -273,23 +305,48 @@ export const PokemonCard: FC = (): JSX.Element => {
         <div className="pokemon-card__info-types">
           <ul>
             {pokemon.types.map((type: PokemonTypesType, index: number) => (
-              <li key={index}>type: {type.type.name}</li>
+              <li key={index}>Type: {modifyPokemonName(type.type.name)}</li>
             ))}
           </ul>
         </div>
       </div>
+      <div className="pokemon-card__additional-info">
+        <p>Base happiness: {additionalPokemonInfo.baseHappiness}</p>
+        <p>Capture rate: {additionalPokemonInfo.captureRate}</p>
+        <p>Color: {additionalPokemonInfo.color}</p>
+        <p>
+          Info:
+          <span>
+            {additionalPokemonInfo.flavorTextEntries.length
+              ? additionalPokemonInfo.flavorTextEntries[3].flavor_text
+              : null}
+          </span>
+        </p>
+        <p>Genus: {additionalPokemonInfo.genus}</p>
+        <p>Habitat: {additionalPokemonInfo.habitat}</p>
+        <p>Shape: {additionalPokemonInfo.shape}</p>
+      </div>
       <div className="pokemon-card__evolution">
         Evolution chain:
         <ul>
-          {filterPokemonEvolutionChain.map((x: any, index: number) => (
-            <>
-              <li>{x.name}</li>
-              <img
-                src={sortedPokemonEvolutionChainImages[index]}
-                alt="pokemon-evolution-chain"
-              />
-            </>
-          ))}
+          {filterPokemonEvolutionChain.map(
+            (pokemon: FilteredPokemonEvolutionChainType, index: number) => (
+              <li key={index}>
+                <p>{pokemon.name}</p>
+                <img
+                  src={
+                    pokemonEvolutionChainImages[index] &&
+                    (pokemonEvolutionChainImages[index].data.sprites.other
+                      .dream_world.front_default ||
+                      pokemonEvolutionChainImages[index].data.sprites.other[
+                        "official-artwork"
+                      ].front_default)
+                  }
+                  alt="pokemon-evolution-chain"
+                />
+              </li>
+            )
+          )}
         </ul>
       </div>
       <h1>{error}</h1>
