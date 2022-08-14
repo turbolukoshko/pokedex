@@ -1,6 +1,9 @@
 import { FC } from "react";
-import { NavigateFunction } from "react-router-dom";
-import { getPokemonNumber, modifyPokemonName } from "../../services/helper";
+import {
+  getPokemonNumber,
+  getPokemonType,
+  modifyPokemonName,
+} from "../../services/helper";
 import "./PokemonTile.scss";
 
 // TODO: fix any
@@ -22,11 +25,11 @@ export const PokemonTile: FC<IPokemonTile> = ({
   pokemon,
   onClick,
 }): JSX.Element => {
-  const { name } = pokemon.types[0].type;
+  const pokemonType = getPokemonType(pokemon);
   // TODO: NEED TO REFACTORING onClick FUNCTION
   return (
     <li
-      className={`pokemon__list-pokemon ${name}`}
+      className={`pokemon__list-pokemon ${pokemonType}`}
       onClick={() => onClick(`/${pokemon.id}`)}
     >
       <div className="pokemon__list-pokemon-info">

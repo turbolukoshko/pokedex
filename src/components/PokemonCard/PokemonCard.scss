@@ -1,0 +1,15 @@
+.pokemon-card {
+  text-align: center;
+
+  .pokemon-card__info {
+    .pokemon-card__info-id {
+      font-size: var(--size-80);
+      opacity: 0.5;
+    }
+
+    .pokemon-card__info-name {
+      font-size: var(--size-70);
+      opacity: 0.5;
+    }
+  }
+}
