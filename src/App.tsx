@@ -9,7 +9,7 @@ import { PokemonCard } from "./components/PokemonCard";
 function App() {
   return (
     <BrowserRouter>
-      <Navigation />
+      {/* <Navigation /> */}
       <Routes>
         <Route index element={<PokemonList />} />
         <Route path="/:id" element={<PokemonCard />} />
