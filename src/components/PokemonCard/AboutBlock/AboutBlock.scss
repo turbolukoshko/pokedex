@@ -1,0 +1,9 @@
+.pokemon-card__additional-info {
+  &-title {
+    margin: var(--size-20) 0;
+  }
+
+  &-item {
+    margin-bottom: var(--size-10);
+  }
+}

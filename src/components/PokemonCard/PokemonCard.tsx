@@ -1,50 +1,24 @@
 import axios from "axios";
 import { FC, useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getPokemon } from "../../api";
 import {
   getPokemonIdFromUrl,
   getPokemonNumber,
   isEmptyObject,
   modifyPokemonName,
-  randomNumber,
 } from "../../services/helper";
 import { PokemonReusableType } from "../../types/global";
 import { Loader } from "../Loader/Loader";
+import { AboutBlock } from "./AboutBlock/AboutBlock";
+import { EvolutionBlock } from "./EvolutionBlock/EvolutionBlock";
 import "./PokemonCard.scss";
-import ground from "../../assets/pokemon-type/ground.png";
-// import rock from "../../assets/pokemon-type/rock.svg";
+import { StatisticBlock } from "./StatisticBlock/StatisticBlock";
 
-type PokemonEvolutionChainType = {
-  name?: string | undefined;
-  id?: string | undefined;
-  url?: string | undefined;
-};
-
-type FilteredPokemonEvolutionChainType = {
+export type FilteredPokemonEvolutionChainType = {
   name: string;
   id: string;
   url: string;
-};
-
-type PokemonCardQueryType = {
-  id?: string;
-};
-
-enum PokemonUnit {
-  m = "m",
-  kg = "kg",
-}
-
-type PokemonStatsType = {
-  base_stat: number;
-  effort: number;
-  stat: PokemonReusableType;
-};
-
-type PokemonTypesType = {
-  slots: number;
-  type: PokemonReusableType;
 };
 
 type EvolutionDetailsType = {
@@ -82,7 +56,11 @@ type PokemonFetchEvolutionChainType = {
   species: PokemonReusableType;
 };
 
-type AdditionalPokemonInfoType = {
+type PokemonCardQueryType = {
+  id?: string;
+};
+
+export type AboutPokemonInfoType = {
   baseHappiness: number | null;
   captureRate: number | null;
   color: string | null;
@@ -100,19 +78,28 @@ type FlavorTextEntiesType = {
   version: PokemonReusableType;
 };
 
+type PokemonEvolutionChainType = {
+  name?: string | undefined;
+  id?: string | undefined;
+  url?: string | undefined;
+};
+
 export const PokemonCard: FC = (): JSX.Element => {
   const queryParams: PokemonCardQueryType = useParams();
 
   // TODO: fix types
   const [pokemon, setPokemon] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [fetchEvolutionChainData, setFetchEvolutionChainData] =
-    useState<PokemonFetchEvolutionChainType | null>(null);
+
   const [pokemonEvolutionChain, setPokemonEvolutionChain] = useState<any>([]);
   const [pokemonEvolutionChainImages, setPokemonEvolutionChainImages] =
     useState<any>([]);
-  const [additionalPokemonInfo, setAdditionalPokemonInfo] =
-    useState<AdditionalPokemonInfoType>({
+  const [pokemonDescriptionOption, setPokemonDescriptionOption] =
+    useState<string>("stats");
+  const [fetchEvolutionChainData, setFetchEvolutionChainData] =
+    useState<PokemonFetchEvolutionChainType | null>(null);
+  const [aboutPokemonInfo, setAboutPokemonInfo] =
+    useState<AboutPokemonInfoType>({
       baseHappiness: null,
       captureRate: null,
       color: null,
@@ -133,49 +120,6 @@ export const PokemonCard: FC = (): JSX.Element => {
     }
   }, [queryParams.id]);
 
-  const fetchPokemonEvolutionChain = async (url: string) => {
-    try {
-      const getSpeciesData = await axios.get(url);
-
-      const {
-        base_happiness,
-        capture_rate,
-        color: { name },
-        flavor_text_entries,
-        genera,
-        habitat,
-        shape,
-      } = getSpeciesData.data;
-
-      const filteredFlavorText = flavor_text_entries.filter(
-        (entry: FlavorTextEntiesType) => entry.language.name === "en"
-      );
-
-      const additionalPokemonData = {
-        baseHappiness: base_happiness,
-        captureRate: capture_rate,
-        color: name,
-        flavorTextEntries: filteredFlavorText,
-        genus: genera[7].genus,
-        habitat: habitat.name,
-        shape: shape.name,
-      };
-
-      const speciesUrl: { url: string } = getSpeciesData.data.evolution_chain;
-      const getEvolutionChain = await axios.get(speciesUrl.url);
-
-      setFetchEvolutionChainData(getEvolutionChain.data.chain);
-      setAdditionalPokemonInfo((additionalPokemonInfo) => ({
-        ...additionalPokemonInfo,
-        ...additionalPokemonData,
-      }));
-    } catch (e) {
-      if (e instanceof Error) {
-        console.error(e.message);
-      }
-    }
-  };
-
   useEffect(() => {
     getPokemonData();
   }, [getPokemonData]);
@@ -195,20 +139,11 @@ export const PokemonCard: FC = (): JSX.Element => {
     // eslint-disable-next-line
   }, [pokemonEvolutionChain]);
 
-  const getPokemonSize = (size: number, unit: string): string | undefined => {
-    let formatSize = size.toString();
-
-    switch (!!formatSize.length) {
-      case formatSize.length === 1:
-        return `0.${formatSize}${unit}`;
-      case formatSize.length === 2:
-        return `${formatSize[0]}.${formatSize[1]}${unit}`;
-      case formatSize.length === 3:
-        return `${formatSize[0]}${formatSize[1]}${unit}`;
-      case formatSize.length === 4:
-        return `${formatSize.slice(0, 3)}${unit}`;
-    }
-  };
+  const filterPokemonEvolutionChain: FilteredPokemonEvolutionChainType[] =
+    pokemonEvolutionChain.filter(
+      (evolutionChain: PokemonEvolutionChainType) =>
+        !isEmptyObject(evolutionChain)
+    );
 
   const createEvolutionChainObject = (
     name: string | undefined,
@@ -269,11 +204,48 @@ export const PokemonCard: FC = (): JSX.Element => {
     ]);
   };
 
-  const filterPokemonEvolutionChain: FilteredPokemonEvolutionChainType[] =
-    pokemonEvolutionChain.filter(
-      (evolutionChain: PokemonEvolutionChainType) =>
-        !isEmptyObject(evolutionChain)
-    );
+  const fetchPokemonEvolutionChain = async (url: string) => {
+    try {
+      const getSpeciesData = await axios.get(url);
+
+      const {
+        base_happiness,
+        capture_rate,
+        color: { name },
+        flavor_text_entries,
+        genera,
+        habitat,
+        shape,
+      } = getSpeciesData.data;
+
+      const filteredFlavorText = flavor_text_entries.filter(
+        (entry: FlavorTextEntiesType) => entry.language.name === "en"
+      );
+
+      const aboutPokemonData = {
+        baseHappiness: base_happiness,
+        captureRate: capture_rate,
+        color: name,
+        flavorTextEntries: filteredFlavorText,
+        genus: genera[7].genus,
+        habitat: habitat && habitat.name,
+        shape: shape && shape.name,
+      };
+
+      const speciesUrl: { url: string } = getSpeciesData.data.evolution_chain;
+      const getEvolutionChain = await axios.get(speciesUrl.url);
+
+      setFetchEvolutionChainData(getEvolutionChain.data.chain);
+      setAboutPokemonInfo((aboutPokemonInfo) => ({
+        ...aboutPokemonInfo,
+        ...aboutPokemonData,
+      }));
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error(e.message);
+      }
+    }
+  };
 
   const getUrlFromPokemonEvolutionChain = filterPokemonEvolutionChain.map(
     (pokemonOption: FilteredPokemonEvolutionChainType) => pokemonOption.url
@@ -307,87 +279,55 @@ export const PokemonCard: FC = (): JSX.Element => {
           {modifyPokemonName(pokemon.name)}
         </h1>
       </div>
-      {/* Stats block */}
-      <div className="pokemon-card__info-stats">
-        <h2 className="pokemon-card__info-stats-title">Main information</h2>
-        <p>Height: {getPokemonSize(pokemon.height, PokemonUnit.m)}</p>
-        <p>Weight: {getPokemonSize(pokemon.weight, PokemonUnit.kg)}</p>
-        <ul>
-          {pokemon.stats.map((stat: PokemonStatsType, index: number) => (
-            <li key={index}>
-              <p>
-                {modifyPokemonName(stat.stat.name)}: {stat.base_stat}
-              </p>
-              <progress id={stat.stat.name} max="100" value={stat.base_stat}>
-                {stat.base_stat}
-              </progress>
-            </li>
-          ))}
-        </ul>
-        <div className="pokemon-card__info-types">
-          <ul>
-            {pokemon.types.map((type: PokemonTypesType, index: number) => (
-              <>
-                <li key={index}>Type: {modifyPokemonName(type.type.name)}</li>{" "}
-                <img
-                  src={require(`../../assets/pokemon-type/${type.type.name}.png`)}
-                  alt={type.type.name}
-                  className="pokemon-card__info-types-image"
-                />
-              </>
-            ))}
-          </ul>
+
+      <div className="pokemon-card__description">
+        <div className="pokemon-card__panel-control">
+          <button
+            onClick={() => setPokemonDescriptionOption("stats")}
+            className={`pokemon-card__panel-control-btn ${
+              pokemonDescriptionOption === "stats" ? "active" : ""
+            }`}
+          >
+            Stats
+          </button>
+          <button
+            onClick={() => setPokemonDescriptionOption("about")}
+            className={`pokemon-card__panel-control-btn ${
+              pokemonDescriptionOption === "about" ? "active" : ""
+            }`}
+          >
+            About
+          </button>
+          <button
+            onClick={() => setPokemonDescriptionOption("evolution")}
+            className={`pokemon-card__panel-control-btn ${
+              pokemonDescriptionOption === "evolution" ? "active" : ""
+            }`}
+          >
+            Evolution
+          </button>
         </div>
+        {pokemonDescriptionOption === "stats" && (
+          <StatisticBlock pokemon={pokemon} />
+        )}
+        {pokemonDescriptionOption === "about" && (
+          <AboutBlock aboutPokemonData={aboutPokemonInfo} />
+        )}
+        {pokemonDescriptionOption === "evolution" && (
+          <EvolutionBlock
+            filterPokemonEvolutionChain={filterPokemonEvolutionChain}
+            pokemonEvolutionChainImages={pokemonEvolutionChainImages}
+          />
+        )}
       </div>
-      {/* Additional info block */}
-      <div
-        className="pokemon-card__additional-info"
-        style={{ backgroundColor: "blue" }}
-      >
-        <p>Base happiness: {additionalPokemonInfo.baseHappiness}</p>
-        <p>Capture rate: {additionalPokemonInfo.captureRate}</p>
-        <p>Color: {additionalPokemonInfo.color}</p>
-        <p>
-          Info:
-          <span>
-            {additionalPokemonInfo.flavorTextEntries.length
-              ? additionalPokemonInfo.flavorTextEntries[
-                  randomNumber(additionalPokemonInfo.flavorTextEntries.length)
-                ].flavor_text
-              : null}
-          </span>
-        </p>
-        <p>Genus: {additionalPokemonInfo.genus}</p>
-        <p>Habitat: {additionalPokemonInfo.habitat}</p>
-        <p>Shape: {additionalPokemonInfo.shape}</p>
+      <Link to="/">Go back</Link>
+      <div className="pokemon-card__prev-next-btn">
+        {pokemon.id !== 1 && (
+          <Link to={`/${String(pokemon.id - 1)}`}>Prev pokemon</Link>
+        )}
+        <Link to={`/${String(pokemon.id + 1)}`}>Next pokemon</Link>
       </div>
-      {/* Evolution Block */}
-      <div
-        className="pokemon-card__evolution"
-        style={{ backgroundColor: "pink" }}
-      >
-        Evolution chain:
-        <ul>
-          {filterPokemonEvolutionChain.map(
-            (pokemon: FilteredPokemonEvolutionChainType, index: number) => (
-              <li key={index}>
-                <p>{pokemon.name}</p>
-                <img
-                  src={
-                    pokemonEvolutionChainImages[index] &&
-                    (pokemonEvolutionChainImages[index].data.sprites.other
-                      .dream_world.front_default ||
-                      pokemonEvolutionChainImages[index].data.sprites.other[
-                        "official-artwork"
-                      ].front_default)
-                  }
-                  alt="pokemon-evolution-chain"
-                />
-              </li>
-            )
-          )}
-        </ul>
-      </div>
+
       <h1>{error}</h1>
     </section>
   ) : (

@@ -1,0 +1,29 @@
+.pokemon-card__info-stats {
+  display: flex;
+  flex-direction: column;
+  &-title {
+    margin: var(--size-20) 0;
+  }
+
+  &-item {
+    margin-bottom: var(--size-10);
+  }
+
+  &-types {
+    &-title {
+      margin-bottom: var(--size-10);
+    }
+
+    &-list {
+      display: flex;
+
+      &-item {
+        margin-right: var(--size-10);
+      }
+
+      &-image {
+        width: var(--size-50);
+      }
+    }
+  }
+}
