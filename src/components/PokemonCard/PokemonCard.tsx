@@ -10,6 +10,7 @@ import {
 } from "../../services/helper";
 import { PokemonReusableType } from "../../types/global";
 import { Loader } from "../Loader/Loader";
+import { ArrowLeft } from "../shared/ArrowLeft/ArrowLeft";
 import { AboutBlock } from "./AboutBlock/AboutBlock";
 import { EvolutionBlock } from "./EvolutionBlock/EvolutionBlock";
 import "./PokemonCard.scss";
@@ -320,7 +321,12 @@ export const PokemonCard: FC = (): JSX.Element => {
           />
         )}
       </div>
-      <Link to="/">Go back</Link>
+      <div className="pokemon-card__back">
+        <ArrowLeft />
+        <Link to="/" className="pokemon-card__back-link">
+          Go back
+        </Link>
+      </div>
       <div className="pokemon-card__prev-next-btn">
         {pokemon.id !== 1 && (
           <Link to={`/${String(pokemon.id - 1)}`}>Prev pokemon</Link>

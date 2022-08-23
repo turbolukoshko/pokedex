@@ -46,4 +46,25 @@
       text-decoration: underline;
     }
   }
+
+  &__back {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    left: var(--size-40);
+    top: var(--size-40);
+
+    svg {
+      margin-right: var(--size-5);
+    }
+
+    &-link {
+      color: var(--black);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
