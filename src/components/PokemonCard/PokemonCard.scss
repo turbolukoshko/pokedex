@@ -33,17 +33,25 @@
   &__panel-control-btn {
     font-size: var(--size-16);
     margin-right: var(--size-10);
-    padding: 0;
+    padding: var(--size-10);
     background: transparent;
-    border: none;
+    border: 1px solid var(--black);
+    box-sizing: border-box;
 
     &:hover {
-      text-decoration: underline;
+      color: var(--white);
+      background: var(--black);
       cursor: pointer;
     }
 
     &.active {
-      text-decoration: underline;
+      color: var(--white);
+      background: var(--black);
+
+      &:hover {
+        color: var(--black);
+        background: var(--white);
+      }
     }
   }
 

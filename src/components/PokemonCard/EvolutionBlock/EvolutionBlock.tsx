@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { FilteredPokemonEvolutionChainType } from "../PokemonCard";
 import "./EvolutionBlock.scss";
 
@@ -12,6 +12,10 @@ export const EvolutionBlock: FC<IEvolutionBlock> = ({
   filterPokemonEvolutionChain,
   pokemonEvolutionChainImages,
 }): JSX.Element => {
+  const params = useParams();
+
+  console.log(params);
+
   return (
     <div className="pokemon-card__evolution">
       <h2 className="pokemon-card__evolution-title">Evolution chain</h2>
@@ -19,7 +23,12 @@ export const EvolutionBlock: FC<IEvolutionBlock> = ({
         {filterPokemonEvolutionChain.map(
           (pokemon: FilteredPokemonEvolutionChainType, index: number) => {
             return (
-              <li key={index} className="pokemon-card__evolution-list-item">
+              <li
+                key={index}
+                className={`pokemon-card__evolution-list-item ${
+                  pokemon.id === params.id ? "active" : ""
+                }`}
+              >
                 <Link to={`/${pokemon.id}`}>
                   <div className="pokemon-card__evolution-list-item-img">
                     <img

@@ -7,6 +7,8 @@ export const ArrowRight = (): JSX.Element => {
       xmlnsXlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
+      width="18px"
+      height="18px"
       viewBox="0 0 31.143 31.143"
       xmlSpace="preserve"
     >

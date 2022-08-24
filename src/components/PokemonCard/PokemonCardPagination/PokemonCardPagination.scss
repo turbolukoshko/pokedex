@@ -1,0 +1,36 @@
+.pokemon-card__pagination {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 95%;
+  width: calc(100% - var(--size-20));
+
+  &-prev {
+    display: flex;
+    margin-right: var(--size-10);
+
+    a {
+      margin-left: var(--size-5);
+      color: var(--black);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &-next {
+    display: flex;
+
+    a {
+      margin-right: var(--size-5);
+      color: var(--black);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

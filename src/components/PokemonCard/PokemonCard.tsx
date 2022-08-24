@@ -13,8 +13,9 @@ import { Loader } from "../Loader/Loader";
 import { ArrowLeft } from "../shared/ArrowLeft/ArrowLeft";
 import { AboutBlock } from "./AboutBlock/AboutBlock";
 import { EvolutionBlock } from "./EvolutionBlock/EvolutionBlock";
-import "./PokemonCard.scss";
+import { PokemonCardPagination } from "./PokemonCardPagination/PokemonCardPagination";
 import { StatisticBlock } from "./StatisticBlock/StatisticBlock";
+import "./PokemonCard.scss";
 
 export type FilteredPokemonEvolutionChainType = {
   name: string;
@@ -327,13 +328,7 @@ export const PokemonCard: FC = (): JSX.Element => {
           Go back
         </Link>
       </div>
-      <div className="pokemon-card__prev-next-btn">
-        {pokemon.id !== 1 && (
-          <Link to={`/${String(pokemon.id - 1)}`}>Prev pokemon</Link>
-        )}
-        <Link to={`/${String(pokemon.id + 1)}`}>Next pokemon</Link>
-      </div>
-
+      <PokemonCardPagination paginationPageId={pokemon.id} />
       <h1>{error}</h1>
     </section>
   ) : (
