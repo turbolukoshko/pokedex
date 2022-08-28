@@ -16,6 +16,7 @@ import { EvolutionBlock } from "./EvolutionBlock/EvolutionBlock";
 import { PokemonCardPagination } from "./PokemonCardPagination/PokemonCardPagination";
 import { StatisticBlock } from "./StatisticBlock/StatisticBlock";
 import "./PokemonCard.scss";
+import { useNavigate } from "react-router-dom";
 
 export type FilteredPokemonEvolutionChainType = {
   name: string;
@@ -88,6 +89,7 @@ type PokemonEvolutionChainType = {
 
 export const PokemonCard: FC = (): JSX.Element => {
   const queryParams: PokemonCardQueryType = useParams();
+  const history = useNavigate();
 
   // TODO: fix types
   const [pokemon, setPokemon] = useState<any | null>(null);
@@ -324,7 +326,11 @@ export const PokemonCard: FC = (): JSX.Element => {
       </div>
       <div className="pokemon-card__back">
         <ArrowLeft />
-        <Link to="/" className="pokemon-card__back-link">
+        <Link
+          to="/"
+          onClick={() => history(-1)}
+          className="pokemon-card__back-link"
+        >
           Go back
         </Link>
       </div>

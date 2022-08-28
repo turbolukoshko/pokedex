@@ -13,9 +13,11 @@ export const PokemonCardPagination: FC<IPokemonCardPagination> = ({
 }): JSX.Element => (
   <div className="pokemon-card__pagination">
     <div className="pokemon-card__pagination-prev">
-      <ArrowLeft />
       {paginationPageId !== 1 && (
-        <Link to={`/${String(paginationPageId - 1)}`}>Prev pokemon</Link>
+        <>
+          <ArrowLeft />
+          <Link to={`/${String(paginationPageId - 1)}`}>Prev pokemon</Link>
+        </>
       )}
     </div>
     <div className="pokemon-card__pagination-next">
