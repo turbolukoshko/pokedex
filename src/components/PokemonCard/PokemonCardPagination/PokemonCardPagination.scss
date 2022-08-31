@@ -9,6 +9,10 @@
     display: flex;
     margin-right: var(--size-10);
 
+    &.disabled {
+      opacity: 0.5;
+    }
+
     a {
       margin-left: var(--size-5);
       color: var(--black);

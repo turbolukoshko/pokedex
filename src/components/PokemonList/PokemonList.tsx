@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPokemonList } from "../../store/pokemon/pokemonActions";
 import { PokemonSelectorState } from "../../store/pokemon/types";
 import { Loader } from "../Loader/Loader";
@@ -21,6 +21,14 @@ export const PokemonList: FC = (): JSX.Element => {
   const dispatch = useDispatch();
   const history = useNavigate();
   const { limit, offset } = paginationData;
+
+  const [searchParams, seSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    seSearchParams("page=1");
+  }, []);
+
+  console.log(searchParams);
 
   useEffect(() => {
     dispatch(getPokemonList(limit, offset));

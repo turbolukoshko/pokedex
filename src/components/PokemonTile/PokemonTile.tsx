@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { routes } from "../../routes";
 import {
   getPokemonNumber,
   getPokemonType,
@@ -30,7 +31,7 @@ export const PokemonTile: FC<IPokemonTile> = ({
   return (
     <li
       className={`pokemon__list-pokemon ${pokemonType}`}
-      onClick={() => onClick(`/${pokemon.id}`)}
+      onClick={() => onClick(`${routes.pokemon}/${pokemon.id}`)}
     >
       <div className="pokemon__list-pokemon-info">
         <h3 className="pokemon__list-pokemon-info-name">
