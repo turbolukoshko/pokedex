@@ -326,6 +326,7 @@ export const PokemonCard: FC = (): JSX.Element => {
       </div>
       <div className="pokemon-card__back">
         <ArrowLeft />
+        {/* TODO: need to fix goBack */}
         <Link
           to="/"
           onClick={() => history(-1)}

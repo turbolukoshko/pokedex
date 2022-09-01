@@ -14,27 +14,48 @@ type PaginationData = {
 
 export const PokemonList: FC = (): JSX.Element => {
   const pokemon = useSelector((state: PokemonSelectorState) => state.pokemon);
-  const [paginationData, setPaginationData] = useState<PaginationData>({
+
+  const paginationData: PaginationData = {
     limit: 20,
     offset: 0,
-  });
+  };
+
   const dispatch = useDispatch();
   const history = useNavigate();
   const { limit, offset } = paginationData;
 
-  const [searchParams, seSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const param = searchParams.get("page") || "1";
+
+  const [queryParamPage, setQueryParamPage] = useState<string>(param);
 
   useEffect(() => {
-    seSearchParams("page=1");
-  }, []);
-
-  console.log(searchParams);
+    if (queryParamPage === "0") {
+      setSearchParams("page=1");
+      setQueryParamPage("1");
+    } else {
+      setSearchParams(`page=${queryParamPage}`);
+    }
+  }, [queryParamPage, setSearchParams]);
 
   useEffect(() => {
-    dispatch(getPokemonList(limit, offset));
-  }, [dispatch, limit, offset]);
+    dispatch(getPokemonList(limit, offset + (+queryParamPage - 1) * 20));
+  }, [dispatch, limit, offset, param, queryParamPage]);
 
-  const { data, loading, next, count } = pokemon;
+  const { data, loading } = pokemon;
+
+  const paginate = (next?: string) => {
+    /* 
+      Hook setQueryParamPage acts as a pagination. 
+      Changes the query parameter on click and re-render page with new data.
+    */
+    next
+      ? setQueryParamPage(String(+queryParamPage + 1))
+      : setQueryParamPage(String(+queryParamPage - 1));
+
+    setSearchParams(`page=${queryParamPage}`);
+  };
 
   return (
     <main className="wrapper">
@@ -55,27 +76,10 @@ export const PokemonList: FC = (): JSX.Element => {
             })}
           </ul>
           <div>
-            <button
-              onClick={() =>
-                setPaginationData({
-                  ...paginationData,
-                  offset: paginationData.offset - 20,
-                })
-              }
-              disabled={paginationData.offset < 20}
-            >
+            <button onClick={() => paginate()} disabled={+queryParamPage === 1}>
               Prev
             </button>
-            <button
-              onClick={() =>
-                setPaginationData({
-                  ...paginationData,
-                  offset: paginationData.offset + 20,
-                })
-              }
-            >
-              Next
-            </button>
+            <button onClick={() => paginate("next")}>Next</button>
           </div>
         </main>
       )}
