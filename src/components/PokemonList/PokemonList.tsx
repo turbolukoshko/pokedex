@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPokemonList } from "../../store/pokemon/pokemonActions";
 import { PokemonSelectorState } from "../../store/pokemon/types";
 import { Loader } from "../Loader/Loader";
+import { Pagination } from "../Pagination/Pagination";
 import { PokemonTile } from "../PokemonTile";
 import "./PokemonList.scss";
 
@@ -75,12 +76,11 @@ export const PokemonList: FC = (): JSX.Element => {
               );
             })}
           </ul>
-          <div>
-            <button onClick={() => paginate()} disabled={+queryParamPage === 1}>
-              Prev
-            </button>
-            <button onClick={() => paginate("next")}>Next</button>
-          </div>
+          <Pagination
+            paginationPageId={+queryParamPage}
+            prev={() => paginate()}
+            next={() => paginate("next")}
+          />
         </main>
       )}
     </main>

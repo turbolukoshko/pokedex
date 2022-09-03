@@ -1,12 +1,12 @@
-.pokemon-card__pagination {
+.pagination {
   display: flex;
   justify-content: center;
-  position: fixed;
-  top: 95%;
   width: calc(100% - var(--size-20));
 
-  &-prev {
+  &-prev,
+  &-next {
     display: flex;
+    align-items: center;
     margin-right: var(--size-10);
 
     &.disabled {
@@ -22,19 +22,20 @@
         text-decoration: underline;
       }
     }
-  }
 
-  &-next {
-    display: flex;
-
-    a {
-      margin-right: var(--size-5);
-      color: var(--black);
-      text-decoration: none;
+    &__button {
+      border: none;
+      font-size: var(--size-16);
+      background: transparent;
 
       &:hover {
+        cursor: pointer;
         text-decoration: underline;
       }
     }
+  }
+
+  &-next {
+    margin: 0;
   }
 }

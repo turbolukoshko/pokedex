@@ -1,6 +1,6 @@
 import axios from "axios";
 import { FC, useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { getPokemon } from "../../api";
 import {
   getPokemonIdFromUrl,
@@ -13,10 +13,10 @@ import { Loader } from "../Loader/Loader";
 import { ArrowLeft } from "../shared/ArrowLeft/ArrowLeft";
 import { AboutBlock } from "./AboutBlock/AboutBlock";
 import { EvolutionBlock } from "./EvolutionBlock/EvolutionBlock";
-import { PokemonCardPagination } from "./PokemonCardPagination/PokemonCardPagination";
+import { Pagination } from "../Pagination/Pagination";
 import { StatisticBlock } from "./StatisticBlock/StatisticBlock";
+import { routes } from "../../routes/index";
 import "./PokemonCard.scss";
-import { useNavigate } from "react-router-dom";
 
 export type FilteredPokemonEvolutionChainType = {
   name: string;
@@ -335,7 +335,11 @@ export const PokemonCard: FC = (): JSX.Element => {
           Go back
         </Link>
       </div>
-      <PokemonCardPagination paginationPageId={pokemon.id} />
+      <Pagination
+        paginationPageId={pokemon.id}
+        prevUrl={`${routes.pokemon}/${String(+pokemon.id - 1)}`}
+        nextUrl={`${routes.pokemon}/${String(+pokemon.id + 1)}`}
+      />
       <h1>{error}</h1>
     </section>
   ) : (
