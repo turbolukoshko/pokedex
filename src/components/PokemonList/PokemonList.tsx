@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { isLastPage } from "../../services/helper";
 import { getPokemonList } from "../../store/pokemon/pokemonActions";
 import { PokemonSelectorState } from "../../store/pokemon/types";
 import { Loader } from "../Loader/Loader";
@@ -24,9 +25,9 @@ export const PokemonList: FC = (): JSX.Element => {
   const dispatch = useDispatch();
   const history = useNavigate();
   const { limit, offset } = paginationData;
+  const { data, loading, count } = pokemon;
 
   const [searchParams, setSearchParams] = useSearchParams();
-
   const param = searchParams.get("page") || "1";
 
   const [queryParamPage, setQueryParamPage] = useState<string>(param);
@@ -41,11 +42,14 @@ export const PokemonList: FC = (): JSX.Element => {
   }, [queryParamPage, setSearchParams]);
 
   useEffect(() => {
-    dispatch(getPokemonList(limit, offset + (+queryParamPage - 1) * 20));
+    dispatch(getPokemonList(limit, offset + (+queryParamPage - 1) * limit));
   }, [dispatch, limit, offset, param, queryParamPage]);
 
-  const { data, loading } = pokemon;
-
+  useEffect(() => {
+    if (!isLastPage(count, +queryParamPage, limit) && count > 0) {
+      <Navigate to={"/"} />;
+    }
+  }, [queryParamPage, count, history, limit]);
   const paginate = (next?: string) => {
     /* 
       Hook setQueryParamPage acts as a pagination. 
@@ -81,6 +85,9 @@ export const PokemonList: FC = (): JSX.Element => {
             prev={() => paginate()}
             next={() => paginate("next")}
           />
+          {!isLastPage(count, +queryParamPage, limit) && count > 0 && (
+            <Navigate to={"/404"} />
+          )}
         </main>
       )}
     </main>

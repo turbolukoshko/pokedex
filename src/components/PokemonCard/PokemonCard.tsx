@@ -275,7 +275,14 @@ export const PokemonCard: FC = (): JSX.Element => {
         </h1>
         <div className="pokemon-card__info-image">
           <img
-            src={pokemon.sprites.other["official-artwork"].front_default}
+            src={
+              pokemon.sprites.other["official-artwork"].front_default ||
+              pokemon.sprites.other.dream_world.front_default ||
+              pokemon.sprites.front_default ||
+              pokemon.sprites.front_shiny ||
+              pokemon.sprites.other.home.front_default ||
+              require("../../assets/pokeball.png")
+            }
             alt={pokemon.name}
           />
         </div>

@@ -1,6 +1,8 @@
 import { FC, SyntheticEvent, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { routes } from "../../routes";
+import { isLastPage } from "../../services/helper";
+import { PokemonSelectorState } from "../../store/pokemon/types";
 import { ArrowLeft } from "../shared/ArrowLeft/ArrowLeft";
 import { ArrowRight } from "../shared/ArrowRight/ArrowRight";
 import "./Pagination.scss";
@@ -25,7 +27,6 @@ export const Pagination: FC<IPagination> = ({
   prev,
   next,
 }): JSX.Element => {
-  const { pokemon } = routes;
   const [disabledButton, setDisabledButton] = useState<boolean>(false);
 
   useEffect(() => {
@@ -36,6 +37,15 @@ export const Pagination: FC<IPagination> = ({
     }
   }, [paginationPageId]);
 
+  /* 
+    count - received items from api
+    limit - limit tiles per page
+  */
+  const pokemon = useSelector((state: PokemonSelectorState) => state.pokemon);
+  const { count } = pokemon;
+  const limit: number = 20;
+
+  //TODO: need to fix isLastPage
   return (
     <div className="pagination">
       <div className={`pagination-prev ${disabledButton ? "disabled" : ""}`}>
@@ -65,13 +75,18 @@ export const Pagination: FC<IPagination> = ({
         It is not possible to count the last element for pagination with disabled button. 
         Since the count property from API is specified incorrectly 
         */}
-      <div className="pagination-next">
+      <div
+        className={`pagination-next ${
+          !isLastPage(count, paginationPageId, limit) ? "" : "disabled"
+        }`}
+      >
         {nextUrl ? (
           <Link to={nextUrl}>Next pokemon</Link>
         ) : (
           <button
             onClick={() => next && next()}
             className="pagination-next__button"
+            disabled={!isLastPage(count, paginationPageId, limit)}
           >
             Next page
           </button>
