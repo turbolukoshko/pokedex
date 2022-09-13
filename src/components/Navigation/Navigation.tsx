@@ -5,17 +5,14 @@ import "./Navigation.scss";
 export const Navigation = () => {
   return (
     <nav className="nav wrapper">
-      <div className="nav__logo">
-        <img src={logo} alt="logo" />
-      </div>
-      <div className="nav__block">
-        <h1 className="nav__block-title">Who are Pokémon?</h1>
-        <p className="nav__block-description">
-          The good guide to explore the world of Pokemon
-        </p>
-        <div className="nav__block-image">
-          <img src={pokeball} alt="pokeball" />
-        </div>
+      <h1 className="nav__logo">Pokedex</h1>
+      <div className="nav__search-panel">
+        <input
+          type="text"
+          placeholder="Type name"
+          className="nav__search-panel-input"
+        />
+        <button className="nav__search-panel-btn">Find</button>
       </div>
     </nav>
   );

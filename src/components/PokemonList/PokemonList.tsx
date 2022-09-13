@@ -64,7 +64,6 @@ export const PokemonList: FC = (): JSX.Element => {
 
   return (
     <main className="wrapper">
-      <h1>Pokemon List</h1>
       {loading ? (
         <Loader />
       ) : (
@@ -85,7 +84,7 @@ export const PokemonList: FC = (): JSX.Element => {
             prev={() => paginate()}
             next={() => paginate("next")}
           />
-          {!isLastPage(count, +queryParamPage, limit) && count > 0 && (
+          {isLastPage(count, +queryParamPage - 1, limit) && count > 0 && (
             <Navigate to={"/404"} />
           )}
         </main>

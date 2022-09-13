@@ -42,9 +42,9 @@ export const getPokemonType = (pokemon: any): string => {
 
 export const isLastPage = (
   count: number,
-  page: number,
+  currentPage: number,
   limit: number
 ): boolean => {
-  console.log(Math.ceil(count / limit), page);
-  return Math.ceil(count / limit) >= page;
+  const totalPages = Math.ceil(count / limit);
+  return totalPages <= currentPage;
 };

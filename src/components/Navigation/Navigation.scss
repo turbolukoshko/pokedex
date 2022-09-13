@@ -1,40 +1,34 @@
 .nav {
-  height: var(--size-500);
+  height: var(--size-50);
   background: var(--red);
-  &__logo {
-    width: var(--size-150);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    img {
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-    }
+  &__logo {
+    color: var(--white);
   }
 
-  &__block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  &__search-panel {
+    &-input {
+      margin-right: var(--size-10);
+      border: 1px solid var(--black);
+      height: var(--size-20);
+      padding: var(--size-5) var(--size-10);
+    }
 
-    &-title,
-    &-description {
+    &-btn {
+      background: var(--black);
+      border: 1px solid transparent;
+      height: var(--size-32);
       color: var(--white);
-    }
+      font-weight: 500;
 
-    &-title {
-      margin: var(--size-35) 0;
-      font-size: var(--size-50);
-    }
-
-    &-description {
-      font-weight: 600;
-    }
-
-    &-image {
-      position: absolute;
-      top: 25%;
-      img {
-        width: var(--size-400);
+      &:hover {
+        background: var(--white);
+        color: var(--black);
+        border-color: var(--black);
+        cursor: pointer;
       }
     }
   }

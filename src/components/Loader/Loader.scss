@@ -1,0 +1,39 @@
+.loader {
+  animation: pokeball 1s;
+  transform: translateY(0px);
+  animation-iteration-count: infinite;
+  position: absolute;
+  margin: 50px;
+}
+
+@keyframes pokeball {
+  0% {
+    top: 0;
+    animation-timing-function: ease-in;
+  }
+
+  50% {
+    top: 140px;
+    animation-timing-function: ease-in;
+  }
+
+  55% {
+    top: 160px;
+    animation-timing-function: ease-in;
+  }
+
+  65% {
+    top: 120px;
+    animation-timing-function: ease-in;
+  }
+
+  95% {
+    top: 0;
+    animation-timing-function: ease-in;
+  }
+
+  100% {
+    top: 0;
+    animation-timing-function: ease-in;
+  }
+}

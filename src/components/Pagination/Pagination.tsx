@@ -45,6 +45,8 @@ export const Pagination: FC<IPagination> = ({
   const { count } = pokemon;
   const limit: number = 20;
 
+  console.log(isLastPage(count, paginationPageId, limit));
+
   //TODO: need to fix isLastPage
   return (
     <div className="pagination">
@@ -77,7 +79,7 @@ export const Pagination: FC<IPagination> = ({
         */}
       <div
         className={`pagination-next ${
-          !isLastPage(count, paginationPageId, limit) ? "" : "disabled"
+          isLastPage(count, paginationPageId, limit) ? "disabled" : ""
         }`}
       >
         {nextUrl ? (
@@ -86,7 +88,7 @@ export const Pagination: FC<IPagination> = ({
           <button
             onClick={() => next && next()}
             className="pagination-next__button"
-            disabled={!isLastPage(count, paginationPageId, limit)}
+            disabled={isLastPage(count, paginationPageId, limit)}
           >
             Next page
           </button>
