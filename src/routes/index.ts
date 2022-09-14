@@ -1,5 +1,6 @@
 export const routes = {
+  home: "/",
   pokemon: "/pokemon",
   pokemonCard: "/pokemon/:id",
-  pageNotFound: "*",
+  pageNotFound: "/404",
 };

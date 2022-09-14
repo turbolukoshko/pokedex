@@ -45,8 +45,6 @@ export const Pagination: FC<IPagination> = ({
   const { count } = pokemon;
   const limit: number = 20;
 
-  console.log(isLastPage(count, paginationPageId, limit));
-
   //TODO: need to fix isLastPage
   return (
     <div className="pagination">

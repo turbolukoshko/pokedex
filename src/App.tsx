@@ -12,8 +12,8 @@ function App() {
   const { pokemon, pokemonCard, pageNotFound } = routes;
   return (
     <>
-      <Navigation />
       <BrowserRouter>
+        <Navigation />
         <Routes>
           <Route index element={<Navigate to={pokemon} replace />} />
           <Route path={pokemon} element={<PokemonList />} />

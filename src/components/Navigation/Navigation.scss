@@ -4,9 +4,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  width: calc(100% - var(--size-20));
+  z-index: 1;
+  padding: 0 var(--size-10);
 
   &__logo {
     color: var(--white);
+
+    &:hover {
+      cursor: pointer;
+      opacity: 0.9;
+    }
   }
 
   &__search-panel {
