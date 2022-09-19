@@ -7,15 +7,20 @@ import "./Navigation.scss";
 
 export const Navigation = () => {
   const [searchParam, setSearchParam] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
   // TODO: add validation
 
   const search = async () => {
     try {
+      if (searchParam === "") {
+        setError("The field cannot be empty");
+        return;
+      }
       const pokemon = await axios.get(getPokemon(searchParam));
-      console.log(pokemon);
       navigate(`${routes.pokemon}/${pokemon.data.id}`);
+      setError("");
 
       // throw new Error("Perhaps the id or name was entered incorrectly");
     } catch (e) {
@@ -43,6 +48,7 @@ export const Navigation = () => {
         <button onClick={() => search()} className="nav__search-panel-btn">
           Find
         </button>
+        <p className="nav__search-panel-error">{error}</p>
       </div>
     </nav>
   );

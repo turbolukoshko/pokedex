@@ -1,5 +1,5 @@
 .nav {
-  height: var(--size-50);
+  height: var(--size-70);
   background: var(--red);
   display: flex;
   align-items: center;
@@ -40,6 +40,12 @@
         border-color: var(--black);
         cursor: pointer;
       }
+    }
+
+    &-error {
+      position: absolute;
+      top: 75%;
+      font-size: 12px;
     }
   }
 }

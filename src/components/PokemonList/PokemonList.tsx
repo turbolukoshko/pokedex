@@ -67,27 +67,35 @@ export const PokemonList: FC = (): JSX.Element => {
       {loading ? (
         <Loader />
       ) : (
-        <main className="pokemon__main">
-          <ul className="pokemon__list">
-            {data.map((pokemon) => {
-              return (
-                <PokemonTile
-                  pokemon={pokemon}
-                  key={pokemon.id}
-                  onClick={history}
-                />
-              );
-            })}
-          </ul>
-          <Pagination
-            paginationPageId={+queryParamPage}
-            prev={() => paginate()}
-            next={() => paginate("next")}
-          />
-          {isLastPage(count, +queryParamPage - 1, limit) && count > 0 && (
-            <Navigate to={"/404"} />
-          )}
-        </main>
+        <div>
+          <aside>
+            <div>
+              <input type="checkbox" id="all" />
+              <label htmlFor="all">All types</label>
+            </div>
+          </aside>
+          <main className="pokemon__main">
+            <ul className="pokemon__list">
+              {data.map((pokemon) => {
+                return (
+                  <PokemonTile
+                    pokemon={pokemon}
+                    key={pokemon.id}
+                    onClick={history}
+                  />
+                );
+              })}
+            </ul>
+            <Pagination
+              paginationPageId={+queryParamPage}
+              prev={() => paginate()}
+              next={() => paginate("next")}
+            />
+            {isLastPage(count, +queryParamPage - 1, limit) && count > 0 && (
+              <Navigate to={"/404"} />
+            )}
+          </main>
+        </div>
       )}
     </main>
   );
