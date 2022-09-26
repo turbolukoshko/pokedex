@@ -112,6 +112,7 @@ export const PokemonList: FC = (): JSX.Element => {
                   <input type="checkbox" id={objectKey} />
                   <label htmlFor={objectKey}>
                     {countPokemonTypes()[objectKey].name}
+                    {countPokemonTypes()[objectKey].count}
                   </label>
                 </>
               ))}
