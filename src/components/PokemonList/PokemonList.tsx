@@ -62,6 +62,39 @@ export const PokemonList: FC = (): JSX.Element => {
     setSearchParams(`page=${queryParamPage}`);
   };
 
+  // get pokemon types for checkbox list
+  const pokemonTypes = data
+    .map((pokemon) =>
+      pokemon.types.map((pokemonType: any) => pokemonType.type.name)
+    )
+    .flatMap((data) => data);
+
+  // unique pokemon types on page
+  const uniquePokemonTypes = Array.from(new Set(pokemonTypes));
+
+  const countPokemonTypes = () => {
+    let totalCountTypes: any = {};
+
+    pokemonTypes.forEach((name) => {
+      if (uniquePokemonTypes.includes(name)) {
+        if (!totalCountTypes.hasOwnProperty(name)) {
+          totalCountTypes[name] = {};
+          totalCountTypes[name].name = name;
+          totalCountTypes[name].count = 1;
+        } else {
+          totalCountTypes[name].count = totalCountTypes[name].count + 1;
+        }
+      }
+    });
+
+    // Returning an array for convenient data mapping
+    return totalCountTypes;
+  };
+
+  console.log(countPokemonTypes());
+
+  // const renderPokemonTypes = countPokemonTypes();
+
   return (
     <main className="wrapper">
       {loading ? (
@@ -72,6 +105,16 @@ export const PokemonList: FC = (): JSX.Element => {
             <div>
               <input type="checkbox" id="all" />
               <label htmlFor="all">All types</label>
+            </div>
+            <div>
+              {Object.keys(countPokemonTypes()).map((objectKey) => (
+                <>
+                  <input type="checkbox" id={objectKey} />
+                  <label htmlFor={objectKey}>
+                    {countPokemonTypes()[objectKey].name}
+                  </label>
+                </>
+              ))}
             </div>
           </aside>
           <main className="pokemon__main">
