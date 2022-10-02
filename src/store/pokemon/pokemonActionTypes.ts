@@ -1,4 +1,4 @@
-import { PokemonPagination } from "./types";
+import { PokemonPagination } from "../types";
 
 export enum PokemonActionTypes {
   FETCH_POKEMON_LIST = "FETCH_POKEMON_LIST",

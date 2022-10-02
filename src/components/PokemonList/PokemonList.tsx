@@ -1,9 +1,13 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { isLastPage } from "../../services/helper";
+import { isLastPage, modifyPokemonName } from "../../services/helper";
+import { filteredPokemon } from "../../store/filteredPokemon/filteredPokemonActions";
 import { getPokemonList } from "../../store/pokemon/pokemonActions";
-import { PokemonSelectorState } from "../../store/pokemon/types";
+import {
+  FilteredPokemonSelectorState,
+  PokemonSelectorState,
+} from "../../store/types";
 import { Loader } from "../Loader/Loader";
 import { Pagination } from "../Pagination/Pagination";
 import { PokemonTile } from "../PokemonTile";
@@ -16,6 +20,9 @@ type PaginationData = {
 
 export const PokemonList: FC = (): JSX.Element => {
   const pokemon = useSelector((state: PokemonSelectorState) => state.pokemon);
+  const filteredPokemonData = useSelector(
+    (state: FilteredPokemonSelectorState) => state.filteredPokemon
+  );
 
   const paginationData: PaginationData = {
     limit: 20,
@@ -25,12 +32,14 @@ export const PokemonList: FC = (): JSX.Element => {
   const dispatch = useDispatch();
   const history = useNavigate();
   const { limit, offset } = paginationData;
-  const { data, loading, count } = pokemon;
+  const { count, loading } = pokemon;
+  const { data } = filteredPokemonData;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const param = searchParams.get("page") || "1";
 
   const [queryParamPage, setQueryParamPage] = useState<string>(param);
+  const [selectValue, setSelectValue] = useState<string>("all");
 
   useEffect(() => {
     if (queryParamPage === "0") {
@@ -45,6 +54,10 @@ export const PokemonList: FC = (): JSX.Element => {
     dispatch(getPokemonList(limit, offset + (+queryParamPage - 1) * limit));
   }, [dispatch, limit, offset, param, queryParamPage]);
 
+  useEffect(() => {
+    dispatch(filteredPokemon("all"));
+  }, [pokemon, dispatch]);
+  
   useEffect(() => {
     if (!isLastPage(count, +queryParamPage, limit) && count > 0) {
       <Navigate to={"/"} />;
@@ -63,7 +76,7 @@ export const PokemonList: FC = (): JSX.Element => {
   };
 
   // get pokemon types for checkbox list
-  const pokemonTypes = data
+  const pokemonTypes = pokemon.data
     .map((pokemon) =>
       pokemon.types.map((pokemonType: any) => pokemonType.type.name)
     )
@@ -91,34 +104,46 @@ export const PokemonList: FC = (): JSX.Element => {
     return totalCountTypes;
   };
 
-  console.log(countPokemonTypes());
+  let totalCountTypes = 0;
 
-  // const renderPokemonTypes = countPokemonTypes();
+  for (let item in countPokemonTypes()) {
+    totalCountTypes += countPokemonTypes()[item].count;
+  }
+
+  const filterPokemonHandle = (value: string) => {
+    setSelectValue(value);
+    dispatch(filteredPokemon(value));
+  };
+
 
   return (
-    <main className="wrapper">
+    <div className="wrapper">
       {loading ? (
         <Loader />
       ) : (
-        <div>
-          <aside>
-            <div>
-              <input type="checkbox" id="all" />
-              <label htmlFor="all">All types</label>
-            </div>
-            <div>
-              {Object.keys(countPokemonTypes()).map((objectKey) => (
-                <>
-                  <input type="checkbox" id={objectKey} />
-                  <label htmlFor={objectKey}>
-                    {countPokemonTypes()[objectKey].name}
-                    {countPokemonTypes()[objectKey].count}
-                  </label>
-                </>
-              ))}
-            </div>
-          </aside>
+        <>
           <main className="pokemon__main">
+            <aside className="sidebar">
+              <h3>Pokemon types</h3>
+              <select
+                className="select"
+                defaultValue={selectValue}
+                onChange={(e) => filterPokemonHandle(e.target.value)}
+              >
+                <option value="all">All types - {totalCountTypes}</option>
+                {Object.keys(countPokemonTypes()).map((objectKey) => (
+                  <option
+                    className="sidebar__element"
+                    value={objectKey}
+                    onChange={(e) => {}}
+                    key={countPokemonTypes()[objectKey].name}
+                  >
+                    {modifyPokemonName(countPokemonTypes()[objectKey].name)} -{" "}
+                    {countPokemonTypes()[objectKey].count}
+                  </option>
+                ))}
+              </select>
+            </aside>
             <ul className="pokemon__list">
               {data.map((pokemon) => {
                 return (
@@ -139,8 +164,8 @@ export const PokemonList: FC = (): JSX.Element => {
               <Navigate to={"/404"} />
             )}
           </main>
-        </div>
+        </>
       )}
-    </main>
+    </div>
   );
 };

@@ -2,7 +2,7 @@ import { FC, SyntheticEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { isLastPage } from "../../services/helper";
-import { PokemonSelectorState } from "../../store/pokemon/types";
+import { PokemonSelectorState } from "../../store/types";
 import { ArrowLeft } from "../shared/ArrowLeft/ArrowLeft";
 import { ArrowRight } from "../shared/ArrowRight/ArrowRight";
 import "./Pagination.scss";

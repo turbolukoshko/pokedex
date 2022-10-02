@@ -21,3 +21,7 @@ export interface PokemonItemData {
 export interface PokemonSelectorState {
   pokemon: PokemonState;
 }
+
+export interface FilteredPokemonSelectorState {
+  filteredPokemon: PokemonData;
+}

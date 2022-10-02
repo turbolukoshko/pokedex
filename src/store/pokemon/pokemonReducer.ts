@@ -2,9 +2,9 @@ import {
   PokemonActions,
   PokemonActionTypes,
 } from "../pokemon/pokemonActionTypes";
-import { PokemonState } from "./types";
+import { PokemonState } from "../types";
 
-const initialState: PokemonState = {
+export const initialState: PokemonState = {
   data: [],
   loading: false,
   error: null,

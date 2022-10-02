@@ -2,7 +2,7 @@ import { getPokemons } from "./../../api/index";
 import axios from "axios";
 import { Dispatch } from "react";
 import { PokemonActions, PokemonActionTypes } from "./pokemonActionTypes";
-import { PokemonItemData, PokemonPagination } from "./types";
+import { PokemonItemData, PokemonPagination } from "../types";
 
 export const getPokemonList = (limit: number = 20, offset: number = 0) => {
   return async (dispatch: Dispatch<PokemonActions>) => {
