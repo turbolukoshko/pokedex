@@ -1,0 +1,68 @@
+.sort__asc,
+.sort__desc {
+  &-btn {
+    background: transparent;
+    border: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  svg {
+    width: var(--size-16);
+  }
+
+  &.disabled {
+    opacity: 0.3;
+  }
+}
+
+.sidebar {
+  margin: var(--size-10);
+
+  &__accordion {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid var(--grey);
+    padding: var(--size-10);
+
+    svg {
+      width: var(--size-16);
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &-inner {
+      margin: var(--size-10) 0;
+      display: flex;
+      align-items: center;
+
+      .select {
+        width: 20%;
+        margin-right: var(--size-20);
+        padding: var(--size-5);
+        font-size: var(--size-14);
+        border-color: var(--grey);
+      }
+
+      .random-pokemon {
+        width: 140px;
+        height: 30px;
+        background: transparent;
+        border: 1px solid var(--black);
+        background: var(--white);
+        color: var(--black);
+        margin-left: var(--size-20);
+
+        &:hover {
+          background: var(--black);
+          color: var(--white);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

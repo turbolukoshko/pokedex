@@ -1,13 +1,14 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import { isLastPage, modifyPokemonName } from "../../services/helper";
+import { isLastPage } from "../../services/helper";
 import { filteredPokemon } from "../../store/filteredPokemon/filteredPokemonActions";
 import { getPokemonList } from "../../store/pokemon/pokemonActions";
 import {
   FilteredPokemonSelectorState,
   PokemonSelectorState,
 } from "../../store/types";
+import { Accordion } from "../Accordion/Accordion";
 import { Loader } from "../Loader/Loader";
 import { Pagination } from "../Pagination/Pagination";
 import { PokemonTile } from "../PokemonTile";
@@ -40,6 +41,7 @@ export const PokemonList: FC = (): JSX.Element => {
 
   const [queryParamPage, setQueryParamPage] = useState<string>(param);
   const [selectValue, setSelectValue] = useState<string>("all");
+  const [activeSort, setActiveSort] = useState<string>("asc");
 
   useEffect(() => {
     if (queryParamPage === "0") {
@@ -57,7 +59,7 @@ export const PokemonList: FC = (): JSX.Element => {
   useEffect(() => {
     dispatch(filteredPokemon("all"));
   }, [pokemon, dispatch]);
-  
+
   useEffect(() => {
     if (!isLastPage(count, +queryParamPage, limit) && count > 0) {
       <Navigate to={"/"} />;
@@ -75,75 +77,21 @@ export const PokemonList: FC = (): JSX.Element => {
     setSearchParams(`page=${queryParamPage}`);
   };
 
-  // get pokemon types for checkbox list
-  const pokemonTypes = pokemon.data
-    .map((pokemon) =>
-      pokemon.types.map((pokemonType: any) => pokemonType.type.name)
-    )
-    .flatMap((data) => data);
-
-  // unique pokemon types on page
-  const uniquePokemonTypes = Array.from(new Set(pokemonTypes));
-
-  const countPokemonTypes = () => {
-    let totalCountTypes: any = {};
-
-    pokemonTypes.forEach((name) => {
-      if (uniquePokemonTypes.includes(name)) {
-        if (!totalCountTypes.hasOwnProperty(name)) {
-          totalCountTypes[name] = {};
-          totalCountTypes[name].name = name;
-          totalCountTypes[name].count = 1;
-        } else {
-          totalCountTypes[name].count = totalCountTypes[name].count + 1;
-        }
-      }
-    });
-
-    // Returning an array for convenient data mapping
-    return totalCountTypes;
-  };
-
-  let totalCountTypes = 0;
-
-  for (let item in countPokemonTypes()) {
-    totalCountTypes += countPokemonTypes()[item].count;
-  }
-
-  const filterPokemonHandle = (value: string) => {
-    setSelectValue(value);
-    dispatch(filteredPokemon(value));
-  };
-
-
   return (
-    <div className="wrapper">
+    <div>
       {loading ? (
         <Loader />
       ) : (
         <>
-          <main className="pokemon__main">
-            <aside className="sidebar">
-              <h3>Pokemon types</h3>
-              <select
-                className="select"
-                defaultValue={selectValue}
-                onChange={(e) => filterPokemonHandle(e.target.value)}
-              >
-                <option value="all">All types - {totalCountTypes}</option>
-                {Object.keys(countPokemonTypes()).map((objectKey) => (
-                  <option
-                    className="sidebar__element"
-                    value={objectKey}
-                    onChange={(e) => {}}
-                    key={countPokemonTypes()[objectKey].name}
-                  >
-                    {modifyPokemonName(countPokemonTypes()[objectKey].name)} -{" "}
-                    {countPokemonTypes()[objectKey].count}
-                  </option>
-                ))}
-              </select>
-            </aside>
+          <Accordion
+            count={count}
+            activeSort={activeSort}
+            setActiveSort={setActiveSort}
+            selectValue={selectValue}
+            setSelectValue={setSelectValue}
+            pokemon={pokemon}
+          />
+          <main className="pokemon__main container">
             <ul className="pokemon__list">
               {data.map((pokemon) => {
                 return (
@@ -157,8 +105,14 @@ export const PokemonList: FC = (): JSX.Element => {
             </ul>
             <Pagination
               paginationPageId={+queryParamPage}
-              prev={() => paginate()}
-              next={() => paginate("next")}
+              prev={() => {
+                setSelectValue("all");
+                paginate();
+              }}
+              next={() => {
+                setSelectValue("all");
+                paginate("next");
+              }}
             />
             {isLastPage(count, +queryParamPage - 1, limit) && count > 0 && (
               <Navigate to={"/404"} />

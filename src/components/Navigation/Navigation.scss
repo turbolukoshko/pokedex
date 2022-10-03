@@ -11,7 +11,18 @@
   padding: 0 var(--size-10);
 
   &__logo {
+    display: flex;
+    align-items: center;
     color: var(--white);
+
+    &-img {
+      width: var(--size-40);
+      margin-right: var(--size-5);
+    }
+
+    &-name {
+      font-size: var(--size-32);
+    }
 
     &:hover {
       cursor: pointer;

@@ -19,6 +19,8 @@ export const filterReducer = (
       return { ...state, loading: true };
     case FilteredPokemonActionsTypes.GET_FILTERED_POKEMON_LIST:
       return { ...state, data: action.payload, loading: false };
+    case FilteredPokemonActionsTypes.GET_SORTED_POKEMON_LIST:
+      return { ...state, data: action.payload };
     default:
       return state;
   }

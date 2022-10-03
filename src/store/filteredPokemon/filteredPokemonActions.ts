@@ -34,11 +34,39 @@ export const filteredPokemon = (type: string) => {
   };
 };
 
+export const sortPokemon = (sortParam: string) => {
+  return async (dispatch: Dispatch<any>, getStore: any) => {
+    const pokemon = getStore().filteredPokemon.data;
+    const deepClonedPokemon = JSON.parse(JSON.stringify(pokemon));
+
+    if (sortParam === "asc") {
+      const sortedPokemon = deepClonedPokemon.sort(
+        (a: any, b: any) => a.id - b.id
+      );
+
+      dispatch(sortPokemonList(sortedPokemon));
+    }
+
+    if (sortParam === "desc") {
+      const sortedPokemon = deepClonedPokemon.sort(
+        (a: any, b: any) => b.id - a.id
+      );
+
+      dispatch(sortPokemonList(sortedPokemon));
+    }
+  };
+};
+
 const filteredPokemonByType = (): FilteredPokemonActions => ({
   type: FilteredPokemonActionsTypes.GET_FILTERED_POKEMON_BY_TYPE,
 });
 
 const filteredPokemonList = (data: any): FilteredPokemonActions => ({
   type: FilteredPokemonActionsTypes.GET_FILTERED_POKEMON_LIST,
+  payload: data,
+});
+
+const sortPokemonList = (data: any) => ({
+  type: FilteredPokemonActionsTypes.GET_SORTED_POKEMON_LIST,
   payload: data,
 });

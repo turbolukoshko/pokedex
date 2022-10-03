@@ -23,6 +23,6 @@ ol {
 }
 
 // wrapper with padding for left and right side
-.wrapper {
-  padding: 0 10px;
+.container {
+  padding: 0 var(--size-10);
 }

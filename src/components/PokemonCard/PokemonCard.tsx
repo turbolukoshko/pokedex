@@ -267,7 +267,7 @@ export const PokemonCard: FC = (): JSX.Element => {
   };
 
   return pokemon ? (
-    <section className="pokemon-card">
+    <section className="pokemon-card container">
       {/* Main Block */}
       <div className="pokemon-card__info">
         <h1 className="pokemon-card__info-id">

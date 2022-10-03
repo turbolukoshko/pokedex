@@ -32,9 +32,15 @@ export const Navigation = () => {
 
   return (
     <nav className="nav">
-      <h1 onClick={() => navigate(routes.home)} className="nav__logo">
-        Pokedex
-      </h1>
+      <div className="nav__logo">
+        <img
+          src={require("../../assets/pokeball2.png")}
+          className="nav__logo-img"
+        />
+        <h1 onClick={() => navigate(routes.home)} className="nav__logo-name">
+          Pokedex
+        </h1>
+      </div>
       <div className="nav__search-panel">
         <input
           type="text"
