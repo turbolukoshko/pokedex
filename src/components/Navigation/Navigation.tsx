@@ -35,6 +35,7 @@ export const Navigation = () => {
       <div className="nav__logo">
         <img
           src={require("../../assets/pokeball2.png")}
+          alt="pokeball"
           className="nav__logo-img"
         />
         <h1 onClick={() => navigate(routes.home)} className="nav__logo-name">

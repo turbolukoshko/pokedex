@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
 import { pokemonReducer } from "./../pokemon/pokemonReducer";
-import { filterReducer } from "../filteredPokemon/filteredPokemonReducer";
+import { favouritePokemonReducer } from "../favouritePokemon/favouritePokemonReducer";
 
 export const rootReducer = combineReducers({
   pokemon: pokemonReducer,
-  filteredPokemon: filterReducer,
+  favouritePokemon: favouritePokemonReducer,
 });

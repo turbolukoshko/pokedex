@@ -1,11 +1,7 @@
 import { FC, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { modifyPokemonName } from "../../services/helper";
-import {
-  filteredPokemon,
-  sortPokemon,
-} from "../../store/filteredPokemon/filteredPokemonActions";
+
 import { PokemonSortParams } from "../../types/global";
 import { ArrowDown } from "../shared/ArrowDown/ArrowDown";
 import { ArrowUp } from "../shared/ArrowUp/ArrowUp";
@@ -13,33 +9,32 @@ import "./Accordion.scss";
 
 interface IAccordion {
   count: number;
-  activeSort: string;
-  setActiveSort: (value: string) => void;
   selectValue: string;
   setSelectValue: (value: string) => void;
   pokemon: any;
+  sortPokemon: (value: string) => void;
 }
 
 export const Accordion: FC<IAccordion> = ({
   count,
-  activeSort,
-  setActiveSort,
   selectValue,
   setSelectValue,
   pokemon,
+  sortPokemon,
 }): JSX.Element => {
   const [activeAccordion, setActiveAccordion] = useState<boolean>(false);
+  const [activeSort, setActiveSort] = useState<string>("asc");
+
   const history = useNavigate();
-  const dispatch = useDispatch();
 
   const filterPokemonHandle = (value: string) => {
+    setActiveSort("asc");
     setSelectValue(value);
-    dispatch(filteredPokemon(value));
   };
 
   const sortPokemonHandle = (value: string) => {
+    sortPokemon(value);
     setActiveSort(value);
-    dispatch(sortPokemon(value));
   };
 
   const switchAccordion = () => {
@@ -51,7 +46,7 @@ export const Accordion: FC<IAccordion> = ({
   };
 
   // get pokemon types for checkbox list
-  const pokemonTypes = pokemon.data
+  const pokemonTypes = pokemon
     .map((pokemon: any) =>
       pokemon.types.map((pokemonType: any) => pokemonType.type.name)
     )
@@ -79,16 +74,14 @@ export const Accordion: FC<IAccordion> = ({
     return totalCountTypes;
   };
 
-  let totalCountTypes = 0;
-
-  for (let item in countPokemonTypes()) {
-    totalCountTypes += countPokemonTypes()[item].count;
-  }
-
   const randomPokemon = () => {
-    const path = Math.ceil((Math.random() * count) / 2);
+    const path =
+      Math.ceil((Math.random() * count) / 2) !== 0
+        ? Math.ceil((Math.random() * count) / 2)
+        : Math.ceil((Math.random() * count) / 2) + 1;
     history(`/pokemon/${path}`);
   };
+
   return (
     <aside className="sidebar">
       <div onClick={switchAccordion} className="sidebar__accordion">
@@ -102,7 +95,7 @@ export const Accordion: FC<IAccordion> = ({
             defaultValue={selectValue}
             onChange={(e) => filterPokemonHandle(e.target.value)}
           >
-            <option value="all">All types - {totalCountTypes}</option>
+            <option value="all">All types</option>
             {Object.keys(countPokemonTypes()).map((objectKey) => (
               <option
                 className="sidebar__element"
@@ -143,6 +136,15 @@ export const Accordion: FC<IAccordion> = ({
           <div>
             <button onClick={() => randomPokemon()} className="random-pokemon">
               Random pokemon
+            </button>
+          </div>
+
+          <div>
+            <button
+              onClick={() => history("/favourite-pokemon")}
+              className="random-pokemon"
+            >
+              Favourite pokemon
             </button>
           </div>
         </div>

@@ -7,9 +7,10 @@ import { PokemonCard } from "./components/PokemonCard";
 import { routes } from "./routes";
 import { PageNotFound } from "./components/PageNotFound/PageNotFound";
 import { Navigation } from "./components/Navigation";
+import { FavouritePokemon } from "./components/FavouritePokemon/FavouritePokemon";
 
 function App() {
-  const { pokemon, pokemonCard, pageNotFound } = routes;
+  const { pokemon, pokemonCard, pageNotFound, favouritePokemon } = routes;
   return (
     <>
       <BrowserRouter>
@@ -18,6 +19,7 @@ function App() {
           <Route index element={<Navigate to={pokemon} replace />} />
           <Route path={pokemon} element={<PokemonList />} />
           <Route path={pokemonCard} element={<PokemonCard />} />
+          <Route path={favouritePokemon} element={<FavouritePokemon />} />
           <Route path={pageNotFound} element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>

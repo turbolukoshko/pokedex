@@ -1,0 +1,17 @@
+.pokemon {
+  &__favourite {
+    display: flex;
+    flex-direction: column;
+    padding: var(--size-10);
+    &-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      &:after {
+        content: "";
+        width: var(--size-350);
+      }
+    }
+  }
+}

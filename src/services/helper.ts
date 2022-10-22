@@ -48,3 +48,14 @@ export const isLastPage = (
   const totalPages = Math.ceil(count / limit);
   return totalPages <= currentPage;
 };
+
+export const transformDataFromLocalStorage = (data: string) => {
+  // if (!!data) {
+  // delete characters "" from localStorage value
+  const trimLocalStorageValue = data?.substring(1, data.length - 1);
+
+  const transformLocalStorageValue = trimLocalStorageValue?.split(",");
+
+  return transformLocalStorageValue;
+  // }
+};

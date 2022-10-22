@@ -1,0 +1,42 @@
+.snackbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 93%;
+  right: 2%;
+  padding: var(--size-20);
+  width: 50%;
+  border-radius: var(--size-10);
+  border: 1px solid var(--black);
+
+  &.warning {
+    background: var(--warning);
+  }
+
+  &.success {
+    color: var(--white);
+    background: var(--success);
+
+    svg {
+      fill: var(--white);
+    }
+  }
+
+  svg {
+    width: var(--size-20);
+    height: var(--size-20);
+  }
+
+  .btn {
+    display: flex;
+    background: none;
+    border: none;
+    font-size: var(--size-16);
+    font-weight: 900;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

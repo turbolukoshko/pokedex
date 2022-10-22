@@ -4,6 +4,6 @@ import "./Loader.scss";
 
 export const Loader: FC = (): JSX.Element => (
   <div className="loader">
-    <img src={loader} />
+    <img src={loader} alt="loader" />
   </div>
 );
