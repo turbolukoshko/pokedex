@@ -37,5 +37,8 @@
 
   &-next {
     margin: 0;
+    a {
+      margin-right: var(--size-5);
+    }
   }
 }

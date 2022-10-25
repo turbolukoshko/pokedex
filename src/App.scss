@@ -1,0 +1,45 @@
+[data-theme="light"] {
+  background: var(--white);
+  color: var(--black);
+}
+
+[data-theme="dark"] {
+  background: var(--black);
+  color: var(--white);
+
+  .pagination {
+    button,
+    a {
+      color: var(--white) !important;
+    }
+    svg {
+      fill: var(--white) !important;
+    }
+  }
+
+  .pokemon-card__evolution-list-item {
+    a {
+      color: var(--white);
+      img {
+        background: var(--white);
+      }
+    }
+  }
+
+  .pokemon-card__panel-control-btn {
+    background: var(--white);
+
+    &.active {
+      border-color: var(--white);
+
+      &:hover {
+        background: var(--black);
+        color: var(--white);
+      }
+    }
+
+    &:hover {
+      border-color: var(--white);
+    }
+  }
+}

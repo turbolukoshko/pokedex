@@ -1,11 +1,16 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, FC } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getPokemon } from "../../api";
 import { routes } from "../../routes/index";
 import "./Navigation.scss";
 
-export const Navigation = () => {
+interface INavigation {
+  theme: string;
+  swithTheme: (value: string) => void;
+}
+
+export const Navigation: FC<INavigation> = ({ swithTheme }) => {
   const [searchParam, setSearchParam] = useState<string>("");
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
@@ -57,6 +62,7 @@ export const Navigation = () => {
         </button>
         <p className="nav__search-panel-error">{error}</p>
       </div>
+      <button onClick={() => swithTheme('dark')}>Switch theme</button>
     </nav>
   );
 };
