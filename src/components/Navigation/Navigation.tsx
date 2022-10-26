@@ -6,14 +6,25 @@ import { routes } from "../../routes/index";
 import "./Navigation.scss";
 
 interface INavigation {
-  theme: string;
-  swithTheme: (value: string) => void;
+  theme: string | null;
+  setTheme: (value: string) => void;
 }
 
-export const Navigation: FC<INavigation> = ({ swithTheme }) => {
+export const Navigation: FC<INavigation> = ({ theme, setTheme }) => {
   const [searchParam, setSearchParam] = useState<string>("");
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
+
+  const switchActiveTheme = () => {
+    if (theme === null || theme === "light") {
+      setTheme("dark");
+      localStorage.setItem("theme", "dark");
+    }
+    if (theme === "dark") {
+      setTheme("light");
+      localStorage.setItem("theme", "light");
+    }
+  };
 
   // TODO: add validation
 
@@ -62,7 +73,7 @@ export const Navigation: FC<INavigation> = ({ swithTheme }) => {
         </button>
         <p className="nav__search-panel-error">{error}</p>
       </div>
-      <button onClick={() => swithTheme('dark')}>Switch theme</button>
+      <button onClick={() => switchActiveTheme()}>Switch theme</button>
     </nav>
   );
 };

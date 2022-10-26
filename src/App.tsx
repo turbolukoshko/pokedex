@@ -10,13 +10,14 @@ import { Navigation } from "./components/Navigation";
 import { FavouritePokemon } from "./components/FavouritePokemon/FavouritePokemon";
 
 function App() {
+  const localStorageTheme = localStorage.getItem("theme");
   const { pokemon, pokemonCard, pageNotFound, favouritePokemon } = routes;
-  const [theme, useTheme] = useState<string>("light");
+  const [theme, setTheme] = useState<string | null>(localStorageTheme);
 
   return (
     <main data-theme={theme} className="main">
       <BrowserRouter>
-        <Navigation theme={theme} swithTheme={useTheme} />
+        <Navigation theme={theme} setTheme={setTheme} />
         <Routes>
           <Route index element={<Navigate to={pokemon} replace />} />
           <Route path={pokemon} element={<PokemonList />} />
